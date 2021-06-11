@@ -1,9 +1,13 @@
-[![Maintained by Gruntwork.io](https://img.shields.io/badge/maintained%20by-gruntwork.io-%235849a6.svg)](https://gruntwork.io/?ref=repo_gruntwork-cli)
-[![GoDoc](https://godoc.org/github.com/gruntwork-io/gruntwork-cli?status.svg)](https://godoc.org/github.com/gruntwork-io/gruntwork-cli)
+[![Maintained by Gruntwork.io](https://img.shields.io/badge/maintained%20by-gruntwork.io-%235849a6.svg)](https://gruntwork.io/?ref=repo_go-commons)
+[![Go Report Card](https://goreportcard.com/badge/github.com/gruntwork-io/go-commons)](https://goreportcard.com/report/github.com/gruntwork-io/go-commons)
+[![go.dev reference](https://img.shields.io/badge/go.dev-reference-007d9c?logo=go&logoColor=white&style=flat-square)](https://pkg.go.dev/mod/github.com/gruntwork-io/go-commons?tab=overview)
+![go.mod version](https://img.shields.io/github/go-mod/go-version/gruntwork-io/go-commons)
 
-# Gruntwork CLI
+# Gruntwork Go Commons
 
-This repo contains common libraries and helpers we can use to build Gruntwork CLI tools.
+This repo contains common libraries and helpers used by Gruntwork for building CLI tools in Go.
+
+**NOTE: This repo was renamed from gruntwork-cli starting v0.8.0. Update your gruntwork-cli references to go-commons.**
 
 ## Packages
 
@@ -15,6 +19,9 @@ This repo contains the following packages:
 * files
 * logging
 * shell
+* ssh
+* retry
+* awscommons
 
 Each of these packages is described below.
 
@@ -25,7 +32,7 @@ these built-in.
 
 ### entrypoint
 
-Most Gruntwork CLI apps should use this package to run their app, as it takes
+Most CLI apps built by Gruntwork should use this package to run their app, as it takes
 care of common tasks such as setting the proper exit code, rendering stack
 traces, handling panics, and rendering help text in a standard format. Note
 that this package assumes you are using
@@ -39,8 +46,8 @@ package main
 
 import (
         "github.com/urfave/cli"
-        "github.com/gruntwork-io/gruntwork-cli/entrypoint"
-        "github.com/gruntwork-io/gruntwork-cli/version"
+        "github.com/gruntwork-io/go-commons/entrypoint"
+        "github.com/gruntwork-io/go-commons/version"
 )
 
 func main() {
@@ -51,9 +58,9 @@ func main() {
       app.Name = "my-app"
       app.Author = "Gruntwork <www.gruntwork.io>"
 
-      // Set the version number from your app from the VERSION variable that is passed in at build time in `version` package
-      // for more understanding see github.com/gruntwork-io/gruntwork-cli/version
-      app.Version = version.Version()
+      // Set the version number from your app from the Version variable that is passed in at build time in `version` package
+      // for more understanding see github.com/gruntwork-io/go-commons/version
+      app.Version = version.GetVersion()
 
       app.Action = func(cliContext *cli.Context) error {
         // ( fill in your app details)
@@ -125,6 +132,21 @@ This package contains two types of helpers:
 
 * `cmd.go`: This file contains helpers for running shell commands.
 * `prompt.go`: This file contains helpers for prompting the user for input (e.g. yes/no).
+
+### ssh
+
+This package contains helper methods for initiating SSH connections and running commands over the connection.
+
+### retry
+
+This package contains helper methods for retrying an action up to a limit.
+
+### awscommons
+
+This package contains routines for interacting with AWS. Meant to provide high level interfaces used throughout various Gruntwork CLIs.
+
+Note that the routines in this package are adapted for `aws-sdk-go-v2`, not v1 (`aws-sdk-go`).
+
 
 ## Running tests
 
